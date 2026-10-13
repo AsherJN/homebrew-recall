@@ -1,0 +1,38 @@
+name: Update Recall
+
+# Points the cask at each new Recall release, after checking the download.
+# Runs every three hours, and on demand from the Actions tab or with
+# `gh workflow run update-recall.yml --repo AsherJN/homebrew-recall`.
+on:
+  schedule:
+    - cron: "17 */3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-recall
+
+jobs:
+  update:
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Check Recall's latest release
+        id: release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 .github/update_recall.py
+
+      - name: Commit the new version
+        if: steps.release.outputs.changed == 'true'
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit --all --message "recall $VERSION"
+          git push
