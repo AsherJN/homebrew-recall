@@ -1,6 +1,6 @@
 cask "recall" do
-  version "1.6.3"
-  sha256 "47aa9fa81b92bafa6afd04bc74c809495b817cd51a4ac49b202085ef2d35b07c"
+  version "1.6.4"
+  sha256 "a848519305c465956cb6d2f01e0decc29010d261a91d8ff72ef036973aa8a74b"
 
   url "https://github.com/AsherJN/recall/releases/download/v#{version}/Recall-#{version}.dmg"
   name "Recall"
